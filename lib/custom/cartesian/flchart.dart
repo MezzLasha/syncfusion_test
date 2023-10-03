@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:syncfusion_test/custom/theme.dart';
 
 class LineChartSample2 extends StatefulWidget {
@@ -44,21 +45,15 @@ class _LineChartSample2State extends State<LineChartSample2> {
   Widget bottomTitleWidgets(double value, TitleMeta meta) {
     const style = TextStyle(fontSize: 12, color: MyTheme.textSecondary);
     Widget text;
-    switch (value.toInt()) {
-      case 2:
-        text = const Text('MAR', style: style);
-        break;
-      case 5:
-        text = const Text('JUN', style: style);
-        break;
-      case 8:
-        text = const Text('SEP', style: style);
-        break;
-      default:
-        text = const Text('', style: style);
-        break;
-    }
 
+    DateTime start = DateTime(2023, 0, 0);
+
+    text = Text(
+        DateFormat('MMM').format(start.add(Duration(days: value.toInt() * 30))),
+        style: style,
+        textAlign: TextAlign.left);
+
+    // text = Text('${value.toInt()}', style: style, textAlign: TextAlign.left);
     return SideTitleWidget(
       axisSide: meta.axisSide,
       child: text,
@@ -125,7 +120,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
                 return null;
               }
               return LineTooltipItem(
-                '${flSpot.y.toInt()}',
+                '${flSpot.y}',
                 const TextStyle(
                   color: MyTheme.darkBlue,
                   fontWeight: FontWeight.bold,
@@ -178,7 +173,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
             showTitles: true,
             interval: 1,
             getTitlesWidget: leftTitleWidgets,
-            reservedSize: 42,
+            reservedSize: 25,
           ),
         ),
       ),

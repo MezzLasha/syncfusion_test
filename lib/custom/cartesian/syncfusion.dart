@@ -24,13 +24,17 @@ class SyncfusionTrendlineWidget extends StatefulWidget {
       SalesData(DateTime(2008, 0, 1), 'Japan', 4.56, 38, 50, 350, 560),
       SalesData(DateTime(2009, 0, 1), 'Russia', 5.87, 54, 66, 444, 566),
       SalesData(DateTime(2010, 0, 1), 'France', 6.8, 57, 78, 780, 650),
-      SalesData(DateTime(2011, 0, 1), 'Germany', 8.5, 70, 84, 450, 800)
+      SalesData(DateTime(2011, 0, 1), 'Germany', 8.5, 70, 84, 450, 800),
+      SalesData(DateTime(2012, 0, 1), 'Italy', 9.6, 78, 96, 500, 900),
+      SalesData(DateTime(2013, 0, 1), 'Sweden', 10.8, 80, 106, 600, 750),
+      SalesData(DateTime(2014, 0, 1), 'UK', 11.8, 87, 115, 700, 800),
+      SalesData(DateTime(2015, 0, 1), 'Latvia', 13.5, 95, 130, 800, 900),
+      SalesData(DateTime(2016, 0, 1), 'Denmark', 15.8, 102, 145, 900, 950),
     ];
     return <SplineAreaSeries<SalesData, num>>[
       SplineAreaSeries<SalesData, num>(
           dataSource: chartData,
-          xValueMapper: (SalesData sales, _) =>
-              sales.numeric.millisecondsSinceEpoch,
+          xValueMapper: (SalesData sales, _) => sales.sales2,
           yValueMapper: (SalesData sales, _) => sales.sales1,
           borderWidth: 3,
           borderDrawMode: BorderDrawMode.top,
@@ -41,14 +45,16 @@ class SyncfusionTrendlineWidget extends StatefulWidget {
               labelPosition: ChartDataLabelPosition.inside)),
       SplineAreaSeries<SalesData, num>(
           dataSource: chartData,
-          xValueMapper: (SalesData sales, _) =>
-              sales.numeric.millisecondsSinceEpoch,
+          xValueMapper: (SalesData sales, _) => sales.sales2,
           borderWidth: 3,
           borderDrawMode: BorderDrawMode.top,
           borderColor: MyTheme.blue,
+          // color: MyTheme.blue,
           gradient: MyTheme.blueGradient,
           yValueMapper: (SalesData sales, _) => sales.sales2,
-          dataLabelSettings: const DataLabelSettings())
+          dataLabelSettings: const DataLabelSettings(
+            color: Colors.white,
+          ))
     ];
   }
 
@@ -73,7 +79,8 @@ class _SyncfusionTrendlineWidgetState extends State<SyncfusionTrendlineWidget> {
               activationMode: ActivationMode.singleTap,
               lineType: CrosshairLineType.vertical),
           series: SyncfusionTrendlineWidget.getDefaultData(),
-          tooltipBehavior: TooltipBehavior(enable: true),
+
+          tooltipBehavior: TooltipBehavior(enable: true, color: Colors.red),
           // onChartTouchInteractionDown: (tapArgs) {
           //   setState(() {
           //     deb = tapArgs.position.dx.toString();

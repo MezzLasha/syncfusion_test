@@ -1,8 +1,6 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
-import 'package:syncfusion_flutter_charts/sparkcharts.dart';
 import 'package:syncfusion_test/custom/cartesian/flchart.dart';
 import 'package:syncfusion_test/custom/cartesian/syncfusion.dart';
 import 'package:syncfusion_test/custom/donut/synfusion.dart';
@@ -54,7 +52,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Syncfusion Test'),
+        title: const Text('Widget Test'),
         actions: [
           Switch(
               value: flchart,
@@ -65,9 +63,9 @@ class _HomeState extends State<Home> {
               })
         ],
       ),
-      body: PageView(
+      body: ListView(
         children: [
-          DonutSyncfusion(),
+          // DonutSyncfusion(),
           Center(
             child: Container(
               margin: const EdgeInsets.all(16),
