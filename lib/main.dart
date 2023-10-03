@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_test/custom/cartesian/flchart.dart';
 import 'package:syncfusion_test/custom/cartesian/syncfusion.dart';
+import 'package:syncfusion_test/custom/donut/flchart.dart';
 import 'package:syncfusion_test/custom/donut/synfusion.dart';
 import 'package:syncfusion_test/custom/metric.dart';
 import 'package:syncfusion_test/custom/theme.dart';
@@ -65,55 +66,80 @@ class _HomeState extends State<Home> {
       ),
       body: ListView(
         children: [
-          // DonutSyncfusion(),
+          const DoghnutChart(),
+          const MetricCard(
+              title: 'საერთო მოგება ნოემნკლტურის მიხედვით ',
+              child: AspectRatio(aspectRatio: 1.2, child: PieChartSample3())),
           Center(
-            child: Container(
-              margin: const EdgeInsets.all(16),
-              decoration: BoxDecoration(boxShadow: const [
-                BoxShadow(
-                  color: Color(0xffD1DFF7),
-                  blurRadius: 4,
-                  spreadRadius: 0,
-                ),
-              ], color: Colors.white, borderRadius: BorderRadius.circular(16)),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-                    child: Row(
-                      children: [
-                        const Text(
-                          'ხარჯები',
-                          style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: MyTheme.darkBlue),
-                        ),
-                        const Spacer(),
-                        IconButton(
-                            onPressed: () {},
-                            iconSize: 40,
-                            color: const Color(0xff1861D5),
-                            icon: const Icon(Icons.star_border_rounded))
-                      ],
-                    ),
+            child: MetricCard(
+                title: 'ხარჯები',
+                child: AnimatedCrossFade(
+                    firstChild: const LineChartSample2(),
+                    secondChild: const SyncfusionTrendlineWidget(),
+                    crossFadeState: flchart
+                        ? CrossFadeState.showFirst
+                        : CrossFadeState.showSecond,
+                    sizeCurve: Curves.easeInOutCubicEmphasized,
+                    duration: const Duration(milliseconds: 500))),
+          ),
+          const MetricWidget()
+        ],
+      ),
+    );
+  }
+}
+
+class MetricCard extends StatelessWidget {
+  const MetricCard({
+    super.key,
+    required this.child,
+    required this.title,
+  });
+
+  final Widget child;
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.all(16),
+      decoration: BoxDecoration(boxShadow: const [
+        BoxShadow(
+          color: Color(0xffD1DFF7),
+          blurRadius: 4,
+          spreadRadius: 0,
+        ),
+      ], color: Colors.white, borderRadius: BorderRadius.circular(16)),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    title,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
+                    softWrap: false,
+                    style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: MyTheme.darkBlue),
                   ),
-                  SizedBox(
-                      // height: 400, width: 400,
-                      child: AnimatedCrossFade(
-                          firstChild: const LineChartSample2(),
-                          secondChild: const SyncfusionTrendlineWidget(),
-                          crossFadeState: flchart
-                              ? CrossFadeState.showFirst
-                              : CrossFadeState.showSecond,
-                          sizeCurve: Curves.easeInOutCubicEmphasized,
-                          duration: const Duration(milliseconds: 500))),
-                ],
-              ),
+                ),
+                IconButton(
+                    onPressed: () {},
+                    iconSize: 40,
+                    color: const Color(0xff1861D5),
+                    icon: const Icon(Icons.star_border_rounded))
+              ],
             ),
           ),
-          MetricWidget()
+          SizedBox(
+            child: child,
+          ),
         ],
       ),
     );

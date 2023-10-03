@@ -1,103 +1,69 @@
-/// Package import
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-
-/// Chart import
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:syncfusion_test/custom/chart_card.dart';
+import 'package:syncfusion_test/main.dart';
 
-class ChartSampleData {
-  ChartSampleData({required this.x, required this.y});
-  final String x;
-  final double y;
-}
-
-class DonutSyncfusion extends StatelessWidget {
-  const DonutSyncfusion({super.key});
+class DoghnutChart extends StatelessWidget {
+  const DoghnutChart({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return PieChart(
-      PieChartData(sections: [
-        PieChartSectionData(
-          color: Colors.red,
-          value: 40,
-          title: '40%',
-          radius: 50,
-          titleStyle: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
-        ),
-        PieChartSectionData(
-          color: Colors.green,
-          value: 30,
-          title: '30%',
-          radius: 50,
-          titleStyle: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
-        ),
-        PieChartSectionData(
-          color: Colors.blue,
-          value: 15,
-          title: '15%',
-          radius: 90,
-          titleStyle: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
-        ),
-        PieChartSectionData(
-          color: Colors.yellow,
-          value: 15,
-          title: '15%',
-          radius: 50,
-          titleStyle: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
-        ),
-      ], centerSpaceRadius: 90),
-
-      swapAnimationDuration: Duration(milliseconds: 150), // Optional
-      swapAnimationCurve: Curves.linear, // Optional
-    );
-  }
-
-  /// Returns the circular charts with rounded corner doughnut series.
-  SfCircularChart _buildRoundedDoughnutChart() {
-    return SfCircularChart(
-      legend:
-          Legend(isVisible: false, overflowMode: LegendItemOverflowMode.wrap),
-      title: ChartTitle(text: true ? '' : 'Software development cycle'),
-      series: _getRoundedDoughnutSeries(),
-    );
-  }
-
-  /// Returns rounded corner doughunut series.
-  List<DoughnutSeries<ChartSampleData, String>> _getRoundedDoughnutSeries() {
-    return <DoughnutSeries<ChartSampleData, String>>[
-      DoughnutSeries<ChartSampleData, String>(
-        dataSource: <ChartSampleData>[
-          ChartSampleData(x: 'Planning', y: 50),
-          ChartSampleData(x: 'Analysis', y: 10),
-          ChartSampleData(x: 'Design', y: 10),
-          ChartSampleData(x: 'Development', y: 10),
-          ChartSampleData(x: 'Testing & Integration', y: 10),
-          ChartSampleData(x: 'Maintainance', y: 10)
-        ],
-        animationDuration: 0,
-        cornerStyle: CornerStyle.bothCurve,
-        radius: '70%',
-        innerRadius: '60%',
-        xValueMapper: (ChartSampleData data, _) => data.x as String,
-        yValueMapper: (ChartSampleData data, _) => data.y,
-      ),
+    final List<ChartData> chartData = [
+      ChartData('David', 25, '25%', const Color(0xFF69C6F9)),
+      ChartData('Steve', 38, "38%", const Color(0xFF25CED1)),
+      ChartData('Jack', 34, "34%", const Color(0xFFD8F3FF)),
+      ChartData('Others', 52, "52%", const Color(0xFF0791EF))
     ];
+
+    return ChartCard(
+      child: Expanded(
+        child: SfCircularChart(
+          annotations: [
+            CircularChartAnnotation(
+              widget: const Center(
+                child: Text(
+                  'სულ გაყიდვები \n\$000.000',
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            )
+          ],
+          series: <CircularSeries>[
+            DoughnutSeries<ChartData, String>(
+              dataSource: chartData,
+              cornerStyle: CornerStyle.endCurve,
+              innerRadius: "70%",
+              // explode: true,
+              dataLabelSettings: const DataLabelSettings(
+                isVisible: true,
+                labelPosition: ChartDataLabelPosition.outside,
+                useSeriesColor: true,
+                textStyle: TextStyle(
+                  color: Colors.white,
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                ),
+                // borderRadius: 50,
+                // margin: EdgeInsets.all(8),
+                connectorLineSettings: ConnectorLineSettings(width: 0),
+              ),
+              pointColorMapper: (ChartData data, _) => data.color,
+              xValueMapper: (ChartData data, _) => data.name,
+              yValueMapper: (ChartData data, _) => data.y,
+              dataLabelMapper: (ChartData data, _) => data.percent,
+            )
+          ],
+        ),
+      ),
+    );
   }
+}
+
+class ChartData {
+  ChartData(this.name, this.y, this.percent, [this.color = Colors.grey]);
+  final String name;
+  final double y;
+  final String percent;
+  final Color color;
 }

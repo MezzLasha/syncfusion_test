@@ -14,34 +14,46 @@ class PieChartSample3State extends State {
 
   @override
   Widget build(BuildContext context) {
-    return AspectRatio(
-      aspectRatio: 1.3,
-      child: AspectRatio(
-        aspectRatio: 1,
-        child: PieChart(
-          PieChartData(
-            pieTouchData: PieTouchData(
-              touchCallback: (FlTouchEvent event, pieTouchResponse) {
-                setState(() {
-                  if (!event.isInterestedForInteractions ||
-                      pieTouchResponse == null ||
-                      pieTouchResponse.touchedSection == null) {
-                    touchedIndex = -1;
-                    return;
-                  }
-                  touchedIndex =
-                      pieTouchResponse.touchedSection!.touchedSectionIndex;
-                });
-              },
+    return PieChart(
+      PieChartData(
+        pieTouchData: PieTouchData(
+          touchCallback: (FlTouchEvent event, pieTouchResponse) {
+            setState(() {
+              if (!event.isInterestedForInteractions ||
+                  pieTouchResponse == null ||
+                  pieTouchResponse.touchedSection == null) {
+                touchedIndex = -1;
+                return;
+              }
+              touchedIndex =
+                  pieTouchResponse.touchedSection!.touchedSectionIndex;
+            });
+          },
+        ),
+        borderData: FlBorderData(
+          show: true,
+          border: const Border(
+            bottom: BorderSide(
+              color: Color(0xff4e4965),
+              width: 4,
             ),
-            borderData: FlBorderData(
-              show: false,
+            left: BorderSide(
+              color: Color(0xff4e4965),
+              width: 4,
             ),
-            sectionsSpace: 0,
-            centerSpaceRadius: 0,
-            sections: showingSections(),
+            right: BorderSide(
+              color: Color(0xff4e4965),
+              width: 4,
+            ),
+            top: BorderSide(
+              color: Color(0xff4e4965),
+              width: 4,
+            ),
           ),
         ),
+        sectionsSpace: 5,
+        centerSpaceRadius: 70,
+        sections: showingSections(),
       ),
     );
   }
@@ -50,86 +62,85 @@ class PieChartSample3State extends State {
     return List.generate(4, (i) {
       final isTouched = i == touchedIndex;
       final fontSize = isTouched ? 20.0 : 16.0;
-      final radius = isTouched ? 110.0 : 100.0;
-      final widgetSize = isTouched ? 55.0 : 40.0;
-      const shadows = [Shadow(color: Colors.black, blurRadius: 2)];
+      final radius = isTouched ? 35.0 : 30.0;
+      final widgetSize = isTouched ? 40.0 : 40.0;
 
       switch (i) {
         case 0:
           return PieChartSectionData(
-            color: MyTheme.cyan,
+            color: const Color(0xff0791EF),
             value: 40,
-            title: '40%',
+            title: '',
             radius: radius,
             titleStyle: TextStyle(
               fontSize: fontSize,
               fontWeight: FontWeight.bold,
               color: const Color(0xffffffff),
-              shadows: shadows,
+              shadows: [],
             ),
             badgeWidget: _Badge(
-              'assets/icons/ophthalmology-svgrepo-com.svg',
+              '40%',
               size: widgetSize,
-              borderColor: MyTheme.textSecondary,
+              borderColor: const Color(0xff0791EF),
             ),
-            badgePositionPercentageOffset: .98,
+            badgePositionPercentageOffset: 2,
           );
         case 1:
           return PieChartSectionData(
-            color: MyTheme.blue,
+            color: const Color(0xff69C6F9),
             value: 30,
-            title: '30%',
+            title: '',
             radius: radius,
             titleStyle: TextStyle(
               fontSize: fontSize,
               fontWeight: FontWeight.bold,
               color: const Color(0xffffffff),
-              shadows: shadows,
+              shadows: [],
             ),
             badgeWidget: _Badge(
-              'assets/icons/librarian-svgrepo-com.svg',
+              '30%',
               size: widgetSize,
-              borderColor: MyTheme.textSecondary,
+              borderColor: const Color(0xff69C6F9),
             ),
-            badgePositionPercentageOffset: .98,
+            badgePositionPercentageOffset: 2,
           );
         case 2:
           return PieChartSectionData(
-            color: MyTheme.purple,
+            color: const Color(0xff25CED1),
             value: 16,
-            title: '16%',
+            title: '',
             radius: radius,
             titleStyle: TextStyle(
               fontSize: fontSize,
               fontWeight: FontWeight.bold,
               color: const Color(0xffffffff),
-              shadows: shadows,
+              shadows: [],
             ),
             badgeWidget: _Badge(
-              'assets/icons/fitness-svgrepo-com.svg',
+              '16%',
               size: widgetSize,
-              borderColor: MyTheme.textSecondary,
+              borderColor: const Color(0xff25CED1),
             ),
-            badgePositionPercentageOffset: .98,
+            badgePositionPercentageOffset: 2,
           );
         case 3:
           return PieChartSectionData(
-            color: MyTheme.darkBlue,
+            color: const Color(0xffD8F3FF),
             value: 15,
-            title: '15%',
+            title: '',
             radius: radius,
             titleStyle: TextStyle(
               fontSize: fontSize,
               fontWeight: FontWeight.bold,
               color: const Color(0xffffffff),
-              shadows: shadows,
+              shadows: [],
             ),
             badgeWidget: _Badge(
-              'assets/icons/worker-svgrepo-com.svg',
+              '15%',
               size: widgetSize,
-              borderColor: MyTheme.textSecondary,
+              borderColor: const Color(0xffD8F3FF),
             ),
-            badgePositionPercentageOffset: .98,
+            badgePositionPercentageOffset: 2,
           );
         default:
           throw Exception('Oh no');
@@ -155,23 +166,19 @@ class _Badge extends StatelessWidget {
       width: size,
       height: size,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: borderColor,
         shape: BoxShape.circle,
         border: Border.all(
           color: borderColor,
           width: 2,
         ),
-        boxShadow: <BoxShadow>[
-          BoxShadow(
-            color: Colors.black.withOpacity(.5),
-            offset: const Offset(3, 3),
-            blurRadius: 3,
-          ),
-        ],
       ),
-      padding: EdgeInsets.all(size * .15),
       child: Center(
-        child: Text(svgAsset),
+        child: Text(svgAsset,
+            style: TextStyle(
+                fontSize: size * .35,
+                color: const Color(0xffffffff),
+                fontWeight: FontWeight.bold)),
       ),
     );
   }
