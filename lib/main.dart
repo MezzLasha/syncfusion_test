@@ -66,7 +66,7 @@ class _HomeState extends State<Home> {
       ),
       body: ListView(
         children: [
-          const DoghnutChart(),
+          // const DoghnutChart(),
           const MetricCard(
               title: 'საერთო მოგება ნოემნკლტურის მიხედვით ',
               child: AspectRatio(aspectRatio: 1.2, child: PieChartSample3())),

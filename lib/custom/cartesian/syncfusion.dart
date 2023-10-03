@@ -1,62 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:syncfusion_test/custom/theme.dart';
 
-class SalesData {
-  SalesData(this.numeric, this.country, this.sales1, this.sales2, this.sales3,
-      this.sales4, this.sales5);
-  final DateTime numeric;
-  final String country;
-  final double sales1;
-  final double sales2;
-  final double sales3;
-  final double sales4;
-  final double sales5;
+class ChartSampleData {
+  final DateTime x;
+  final double y;
+  final double secondSeriesYValue;
+
+  ChartSampleData(
+      {required this.x, required this.y, required this.secondSeriesYValue});
 }
 
 class SyncfusionTrendlineWidget extends StatefulWidget {
   const SyncfusionTrendlineWidget({super.key});
-  static List<SplineAreaSeries<SalesData, num>> getDefaultData() {
-    final List<SalesData> chartData = <SalesData>[
-      SalesData(DateTime(2005, 0, 1), 'India', 1.5, 21, 28, 680, 760),
-      SalesData(DateTime(2006, 0, 1), 'China', 2.2, 24, 44, 550, 880),
-      SalesData(DateTime(2007, 0, 1), 'USA', 3.32, 36, 48, 440, 788),
-      SalesData(DateTime(2008, 0, 1), 'Japan', 4.56, 38, 50, 350, 560),
-      SalesData(DateTime(2009, 0, 1), 'Russia', 5.87, 54, 66, 444, 566),
-      SalesData(DateTime(2010, 0, 1), 'France', 6.8, 57, 78, 780, 650),
-      SalesData(DateTime(2011, 0, 1), 'Germany', 8.5, 70, 84, 450, 800),
-      SalesData(DateTime(2012, 0, 1), 'Italy', 9.6, 78, 96, 500, 900),
-      SalesData(DateTime(2013, 0, 1), 'Sweden', 10.8, 80, 106, 600, 750),
-      SalesData(DateTime(2014, 0, 1), 'UK', 11.8, 87, 115, 700, 800),
-      SalesData(DateTime(2015, 0, 1), 'Latvia', 13.5, 95, 130, 800, 900),
-      SalesData(DateTime(2016, 0, 1), 'Denmark', 15.8, 102, 145, 900, 950),
-    ];
-    return <SplineAreaSeries<SalesData, num>>[
-      SplineAreaSeries<SalesData, num>(
-          dataSource: chartData,
-          xValueMapper: (SalesData sales, _) => sales.sales2,
-          yValueMapper: (SalesData sales, _) => sales.sales1,
-          borderWidth: 3,
-          borderDrawMode: BorderDrawMode.top,
-          borderColor: MyTheme.cyan,
-          enableTooltip: true,
-          gradient: MyTheme.cyanGradient,
-          dataLabelSettings: const DataLabelSettings(
-              labelPosition: ChartDataLabelPosition.inside)),
-      SplineAreaSeries<SalesData, num>(
-          dataSource: chartData,
-          xValueMapper: (SalesData sales, _) => sales.sales2,
-          borderWidth: 3,
-          borderDrawMode: BorderDrawMode.top,
-          borderColor: MyTheme.blue,
-          // color: MyTheme.blue,
-          gradient: MyTheme.blueGradient,
-          yValueMapper: (SalesData sales, _) => sales.sales2,
-          dataLabelSettings: const DataLabelSettings(
-            color: Colors.white,
-          ))
-    ];
-  }
 
   @override
   State<SyncfusionTrendlineWidget> createState() =>
@@ -64,35 +21,114 @@ class SyncfusionTrendlineWidget extends StatefulWidget {
 }
 
 class _SyncfusionTrendlineWidgetState extends State<SyncfusionTrendlineWidget> {
-  String deb = '';
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text(deb),
-        Center(
-            child: SfCartesianChart(
-          crosshairBehavior: CrosshairBehavior(
-              enable: true,
-              lineColor: MyTheme.purple,
-              lineWidth: 3,
-              activationMode: ActivationMode.singleTap,
-              lineType: CrosshairLineType.vertical),
-          series: SyncfusionTrendlineWidget.getDefaultData(),
+    return _buildSplineAreaChart();
+  }
 
-          tooltipBehavior: TooltipBehavior(enable: true, color: Colors.red),
-          // onChartTouchInteractionDown: (tapArgs) {
-          //   setState(() {
-          //     deb = tapArgs.position.dx.toString();
-          //   });
-          // },
-          // onChartTouchInteractionMove: (tapArgs) {
-          //   setState(() {
-          //     deb = tapArgs.position.dx.toString();
-          //   });
-          // },
-        )),
-      ],
+  /// Returns the cartesian spline are chart.
+  SfCartesianChart _buildSplineAreaChart() {
+    return SfCartesianChart(
+      legend: const Legend(isVisible: true, opacity: 0.7),
+      title: ChartTitle(text: ''),
+      plotAreaBorderWidth: 0,
+      primaryXAxis: DateTimeAxis(
+          interval: 2,
+          dateFormat: DateFormat('MMM'),
+          majorGridLines: const MajorGridLines(width: 0),
+          edgeLabelPlacement: EdgeLabelPlacement.shift),
+      primaryYAxis: NumericAxis(
+          labelFormat: '{value}',
+          axisLine: const AxisLine(width: 0),
+          majorTickLines: const MajorTickLines(size: 0)),
+      series: _getSplieAreaSeries(),
+      tooltipBehavior: TooltipBehavior(
+        enable: true,
+        builder: (data, point, series, pointIndex, seriesIndex) {
+          final d = data;
+          return Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(5),
+              boxShadow: const [
+                BoxShadow(
+                  color: Color(0xffABD7EB),
+                  blurRadius: 5,
+                  offset: Offset(0, 2),
+                ),
+              ],
+            ),
+            padding: const EdgeInsets.all(10),
+            child: Text(
+              '\$${data.y1}',
+              style: const TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
+
+  List<_SplineAreaData>? chartData;
+
+  @override
+  void initState() {
+    chartData = <_SplineAreaData>[
+      _SplineAreaData(DateTime(2010, 1), 10.53, 3.3), // January
+      _SplineAreaData(DateTime(2010, 2), 9.5, 5.4), // February
+      _SplineAreaData(DateTime(2010, 3), 10, 2.65), // March
+      _SplineAreaData(DateTime(2010, 4), 9.4, 2.62), // April
+      _SplineAreaData(DateTime(2010, 5), 5.8, 1.99), // May
+      _SplineAreaData(DateTime(2010, 6), 4.9, 1.44), // June
+      _SplineAreaData(DateTime(2010, 7), 4.5, 2), // July
+      _SplineAreaData(DateTime(2010, 8), 3.6, 1.56), // August
+      _SplineAreaData(DateTime(2010, 9), 3.43, 2.1), // September
+      _SplineAreaData(DateTime(2010, 10), 3.43, 2.1), // October
+      _SplineAreaData(DateTime(2010, 11), 3.43, 2.1), // November
+      _SplineAreaData(DateTime(2010, 12), 3.43, 2.1), // December
+    ];
+    super.initState();
+  }
+
+  /// Returns the list of chart series
+  /// which need to render on the spline area chart.
+  List<ChartSeries<_SplineAreaData, DateTime>> _getSplieAreaSeries() {
+    return <ChartSeries<_SplineAreaData, DateTime>>[
+      SplineAreaSeries<_SplineAreaData, DateTime>(
+        dataSource: chartData!,
+        gradient: MyTheme.blueGradient,
+        borderColor: MyTheme.blue,
+        borderWidth: 4,
+        name: '1',
+        xValueMapper: (_SplineAreaData sales, _) => sales.year,
+        yValueMapper: (_SplineAreaData sales, _) => sales.y1,
+      ),
+      SplineAreaSeries<_SplineAreaData, DateTime>(
+        dataSource: chartData!,
+        borderColor: MyTheme.cyan,
+        borderWidth: 4,
+        gradient: MyTheme.cyanGradient,
+        name: '2',
+        xValueMapper: (_SplineAreaData sales, _) => sales.year,
+        yValueMapper: (_SplineAreaData sales, _) => sales.y2,
+      )
+    ];
+  }
+
+  @override
+  void dispose() {
+    chartData!.clear();
+    super.dispose();
+  }
+}
+
+/// Private class for storing the spline area chart datapoints.
+class _SplineAreaData {
+  _SplineAreaData(this.year, this.y1, this.y2);
+  final DateTime year;
+  final double y1;
+  final double y2;
 }

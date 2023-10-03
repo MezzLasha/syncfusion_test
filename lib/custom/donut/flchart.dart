@@ -14,47 +14,91 @@ class PieChartSample3State extends State {
 
   @override
   Widget build(BuildContext context) {
-    return PieChart(
-      PieChartData(
-        pieTouchData: PieTouchData(
-          touchCallback: (FlTouchEvent event, pieTouchResponse) {
-            setState(() {
-              if (!event.isInterestedForInteractions ||
-                  pieTouchResponse == null ||
-                  pieTouchResponse.touchedSection == null) {
-                touchedIndex = -1;
-                return;
-              }
-              touchedIndex =
-                  pieTouchResponse.touchedSection!.touchedSectionIndex;
-            });
-          },
-        ),
-        borderData: FlBorderData(
-          show: true,
-          border: const Border(
-            bottom: BorderSide(
-              color: Color(0xff4e4965),
-              width: 4,
-            ),
-            left: BorderSide(
-              color: Color(0xff4e4965),
-              width: 4,
-            ),
-            right: BorderSide(
-              color: Color(0xff4e4965),
-              width: 4,
-            ),
-            top: BorderSide(
-              color: Color(0xff4e4965),
-              width: 4,
+    return Row(
+      children: [
+        Expanded(
+          child: PieChart(
+            PieChartData(
+              pieTouchData: PieTouchData(
+                touchCallback: (FlTouchEvent event, pieTouchResponse) {
+                  setState(() {
+                    if (!event.isInterestedForInteractions ||
+                        pieTouchResponse == null ||
+                        pieTouchResponse.touchedSection == null) {
+                      touchedIndex = -1;
+                      return;
+                    }
+                    touchedIndex =
+                        pieTouchResponse.touchedSection!.touchedSectionIndex;
+                  });
+                },
+              ),
+              borderData: FlBorderData(
+                show: true,
+                border: const Border(
+                  bottom: BorderSide(
+                    color: Color(0xff4e4965),
+                    width: 4,
+                  ),
+                  left: BorderSide(
+                    color: Color(0xff4e4965),
+                    width: 4,
+                  ),
+                  right: BorderSide(
+                    color: Color(0xff4e4965),
+                    width: 4,
+                  ),
+                  top: BorderSide(
+                    color: Color(0xff4e4965),
+                    width: 4,
+                  ),
+                ),
+              ),
+              sectionsSpace: 5,
+              centerSpaceRadius: 70,
+              sections: showingSections(),
             ),
           ),
         ),
-        sectionsSpace: 5,
-        centerSpaceRadius: 70,
-        sections: showingSections(),
-      ),
+        const Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Indicator(
+              color: Color(0xff0791EF),
+              text: 'First',
+              isSquare: true,
+            ),
+            SizedBox(
+              height: 4,
+            ),
+            Indicator(
+              color: Color(0xff69C6F9),
+              text: 'Second',
+              isSquare: true,
+            ),
+            SizedBox(
+              height: 4,
+            ),
+            Indicator(
+              color: Color(0xff25CED1),
+              text: 'Third',
+              isSquare: true,
+            ),
+            SizedBox(
+              height: 4,
+            ),
+            Indicator(
+              color: Color(0xffD8F3FF),
+              text: 'Fourth',
+              isSquare: true,
+            ),
+            SizedBox(
+              height: 18,
+            ),
+          ],
+        ),
+      ],
     );
   }
 
@@ -180,6 +224,49 @@ class _Badge extends StatelessWidget {
                 color: const Color(0xffffffff),
                 fontWeight: FontWeight.bold)),
       ),
+    );
+  }
+}
+
+class Indicator extends StatelessWidget {
+  const Indicator({
+    super.key,
+    required this.color,
+    required this.text,
+    required this.isSquare,
+    this.size = 16,
+    this.textColor,
+  });
+  final Color color;
+  final String text;
+  final bool isSquare;
+  final double size;
+  final Color? textColor;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: <Widget>[
+        Container(
+          width: size,
+          height: size,
+          decoration: BoxDecoration(
+            shape: isSquare ? BoxShape.rectangle : BoxShape.circle,
+            color: color,
+          ),
+        ),
+        const SizedBox(
+          width: 4,
+        ),
+        Text(
+          text,
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: textColor,
+          ),
+        )
+      ],
     );
   }
 }

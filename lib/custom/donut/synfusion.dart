@@ -32,7 +32,7 @@ class DoghnutChart extends StatelessWidget {
           series: <CircularSeries>[
             DoughnutSeries<ChartData, String>(
               dataSource: chartData,
-              cornerStyle: CornerStyle.endCurve,
+              cornerStyle: CornerStyle.bothFlat,
               innerRadius: "70%",
               // explode: true,
               dataLabelSettings: const DataLabelSettings(
